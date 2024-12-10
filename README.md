@@ -1,0 +1,1 @@
+# js-lexicon-community-types
