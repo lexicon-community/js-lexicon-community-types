@@ -2,9 +2,23 @@
   "name": "@lexicon-community/types",
   "version": "1.0.0",
   "description": "Complete typescript types and validation functions generated for lexicon-community lexicons",
-  "main": "src/index.ts",
+  "type": "commonjs",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "package.json",
+    "README.md",
+    "LICENSE"
+  ],
   "scripts": {
-    "build": "tsc --build tsconfig.build.json",
+    "build": "tsc --build --declaration",
     "test": "jest"
   },
   "repository": {
