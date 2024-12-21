@@ -19,7 +19,7 @@
   },
   "homepage": "https://github.com/lexicon-community/js-lexicon-community-types#readme",
   "dependencies": {
-    "@atproto/xrpc-server": "^0.7.4"
+    "@atproto/xrpc": "^0.6.5"
   },
   "devDependencies": {
     "@types/jest": "^29.5.14",

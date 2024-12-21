@@ -1,47 +1,61 @@
-import { createServer, Server } from '../src'
-import * as CommunityLexiconBookmarksGetActorBookmarks from '../src/types/community/lexicon/bookmarks/getActorBookmarks'
-import { beforeEach, describe, expect, it, jest } from '@jest/globals'
+import { toKnownErr, Response, CallOptions, QueryParams } from '../src/types/community/lexicon/bookmarks/getActorBookmarks'
 
 describe('getActorBookmarks', () => {
-  let server: Server
-
-  beforeEach(() => {
-    server = createServer()
+  describe('toKnownErr', () => {
+    it('should return the error passed to it', () => {
+      const error = new Error('Test error')
+      const result = toKnownErr(error)
+      expect(result).toBe(error)
+    })
   })
 
-  it('should call getActorBookmarks method with correct configuration', () => {
-    const mockHandler = jest.fn() as unknown as CommunityLexiconBookmarksGetActorBookmarks.Handler<any>
-    const mockConfig = {
-      handler: mockHandler,
-    }
-
-    const methodSpy = jest.spyOn(server.xrpc, 'method').mockImplementation(() => {
-      return Promise.resolve()
+  describe('QueryParams interface', () => {
+    it('should have the correct structure', () => {
+      const queryParams: QueryParams = {
+        tags: ['exampleTag'],
+        limit: 10,
+        cursor: 'exampleCursor'
+      }
+  
+      expect(queryParams.tags).toStrictEqual(['exampleTag'])
+      expect(queryParams.limit).toBe(10)
+      expect(queryParams.cursor).toBe('exampleCursor')
     })
-
-    server.community.lexicon.bookmarks.getActorBookmarks(mockConfig)
-
-    expect(methodSpy).toHaveBeenCalledWith(
-      'community.lexicon.bookmarks.getActorBookmarks',
-      mockConfig
-    )
-
-    methodSpy.mockRestore()
+  
+    it('should allow optional properties to be omitted', () => {
+      const queryParams: QueryParams = {
+      }
+  
+      expect(queryParams.tags).toBeUndefined()
+      expect(queryParams.limit).toBeUndefined()
+      expect(queryParams.cursor).toBeUndefined()
+    })
   })
 
-  it('should handle the response correctly', async () => {
-    const mockHandler = jest.fn() as unknown as CommunityLexiconBookmarksGetActorBookmarks.Handler<any>
-    const mockConfig = {
-      handler: mockHandler,
-    }
+  describe('Response interface', () => {
+    it('should have the correct structure', () => {
+      const response: Response = {
+        success: true,
+        headers: { 'content-type': 'application/json' },
+        data: { bookmarks: [] }
+      }
 
-    const mockResponse = { data: 'mockData' }
-    jest.spyOn(server.xrpc, 'method').mockImplementation(() => {
-      return Promise.resolve(mockResponse)
+      expect(response.success).toBe(true)
+      expect(response.headers['content-type']).toBe('application/json')
+      expect(response.data).toBeDefined()
     })
+  })
 
-    const response = await server.community.lexicon.bookmarks.getActorBookmarks(mockConfig)
+  describe('CallOptions interface', () => {
+    it('should have the correct structure', () => {
+      const abortController = new AbortController()
+      const callOptions: CallOptions = {
+        signal: abortController.signal,
+        headers: { 'authorization': 'Bearer token' }
+      }
 
-    expect(response).toEqual(mockResponse)
+      expect(callOptions.signal).toBeInstanceOf(AbortSignal)
+      expect(callOptions.headers!['authorization']).toBe('Bearer token')
+    })
   })
 })

@@ -1,93 +1,62 @@
 /**
  * GENERATED CODE - DO NOT MODIFY
  */
-import {
-  createServer as createXrpcServer,
-  Server as XrpcServer,
-  Options as XrpcOptions,
-  AuthVerifier,
-  StreamAuthVerifier,
-} from '@atproto/xrpc-server'
 import { schemas } from './lexicons'
 import * as CommunityLexiconBookmarksGetActorBookmarks from './types/community/lexicon/bookmarks/getActorBookmarks'
+import { FetchHandler, FetchHandlerOptions, XrpcClient } from '@atproto/xrpc'
 export * as CommunityLexiconBookmarksGetActorBookmarks from './types/community/lexicon/bookmarks/getActorBookmarks'
 export * as CommunityLexiconBookmarksBookmark from './types/community/lexicon/bookmarks/bookmark'
 
-export function createServer(options?: XrpcOptions): Server {
-  return new Server(options)
-}
-
-export class Server {
-  xrpc: XrpcServer
+export class AtpBaseClient extends XrpcClient {
   community: CommunityNS
 
-  constructor(options?: XrpcOptions) {
-    this.xrpc = createXrpcServer(schemas, options)
+  constructor(options: FetchHandler | FetchHandlerOptions) {
+    super(options, schemas)
     this.community = new CommunityNS(this)
+  }
+
+  /** @deprecated use `this` instead */
+  get xrpc(): XrpcClient {
+    return this
   }
 }
 
 export class CommunityNS {
-  _server: Server
+  _client: XrpcClient
   lexicon: CommunityLexiconNS
 
-  constructor(server: Server) {
-    this._server = server
-    this.lexicon = new CommunityLexiconNS(server)
+  constructor(client: XrpcClient) {
+    this._client = client
+    this.lexicon = new CommunityLexiconNS(client)
   }
 }
 
 export class CommunityLexiconNS {
-  _server: Server
+  _client: XrpcClient
   bookmarks: CommunityLexiconBookmarksNS
 
-  constructor(server: Server) {
-    this._server = server
-    this.bookmarks = new CommunityLexiconBookmarksNS(server)
+  constructor(client: XrpcClient) {
+    this._client = client
+    this.bookmarks = new CommunityLexiconBookmarksNS(client)
   }
 }
 
 export class CommunityLexiconBookmarksNS {
-  _server: Server
+  _client: XrpcClient
 
-  constructor(server: Server) {
-    this._server = server
+  constructor(client: XrpcClient) {
+    this._client = client
   }
 
-  getActorBookmarks<AV extends AuthVerifier>(
-    cfg: ConfigOf<
-      AV,
-      CommunityLexiconBookmarksGetActorBookmarks.Handler<ExtractAuth<AV>>,
-      CommunityLexiconBookmarksGetActorBookmarks.HandlerReqCtx<ExtractAuth<AV>>
-    >,
-  ) {
-    const nsid = 'community.lexicon.bookmarks.getActorBookmarks' // @ts-ignore
-    return this._server.xrpc.method(nsid, cfg)
+  getActorBookmarks(
+    params?: CommunityLexiconBookmarksGetActorBookmarks.QueryParams,
+    opts?: CommunityLexiconBookmarksGetActorBookmarks.CallOptions,
+  ): Promise<CommunityLexiconBookmarksGetActorBookmarks.Response> {
+    return this._client.call(
+      'community.lexicon.bookmarks.getActorBookmarks',
+      params,
+      undefined,
+      opts,
+    )
   }
 }
-
-type SharedRateLimitOpts<T> = {
-  name: string
-  calcKey?: (ctx: T) => string
-  calcPoints?: (ctx: T) => number
-}
-type RouteRateLimitOpts<T> = {
-  durationMs: number
-  points: number
-  calcKey?: (ctx: T) => string
-  calcPoints?: (ctx: T) => number
-}
-type HandlerOpts = { blobLimit?: number }
-type HandlerRateLimitOpts<T> = SharedRateLimitOpts<T> | RouteRateLimitOpts<T>
-type ConfigOf<Auth, Handler, ReqCtx> =
-  | Handler
-  | {
-      auth?: Auth
-      opts?: HandlerOpts
-      rateLimit?: HandlerRateLimitOpts<ReqCtx> | HandlerRateLimitOpts<ReqCtx>[]
-      handler: Handler
-    }
-type ExtractAuth<AV extends AuthVerifier | StreamAuthVerifier> = Extract<
-  Awaited<ReturnType<AV>>,
-  { credentials: unknown }
->
