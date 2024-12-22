@@ -1,0 +1,51 @@
+{
+  "name": "@lexicon-community/types",
+  "version": "1.0.0",
+  "description": "Complete typescript types and validation functions generated for lexicon-community lexicons",
+  "type": "commonjs",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "package.json",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "build": "tsc --build --declaration",
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lexicon-community/js-lexicon-community-types.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/lexicon-community/js-lexicon-community-types/issues"
+  },
+  "homepage": "https://github.com/lexicon-community/js-lexicon-community-types#readme",
+  "dependencies": {
+    "@atproto/xrpc": "^0.6.5"
+  },
+  "devDependencies": {
+    "@types/jest": "^29.5.14",
+    "jest": "^29.0.0",
+    "prettier": "^3.2.5",
+    "ts-jest": "^29.2.5",
+    "typescript": "^5.6.3"
+  },
+  "jest": {
+    "testMatch": [
+      "**/?(*.)+(spec|test).[tj]s?(x)"
+    ],
+    "preset": "ts-jest",
+    "testEnvironment": "node"
+  }
+}
