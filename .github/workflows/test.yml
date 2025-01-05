@@ -1,8 +1,7 @@
 name: Unit tests
 
 on:
-  pull_request:
-    types: [synchronize]
+  pull_request
 
 jobs:
   test:
