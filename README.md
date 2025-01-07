@@ -2,10 +2,45 @@
 Complete typescript types and validation functions generated for the [lexicon-community lexicon schemas](https://github.com/lexicon-community/lexicon) using the [atproto lex-cli package](https://github.com/bluesky-social/atproto/tree/main/packages/lex-cli)
 
 ## Getting started
-TODO
+1. `npm install @lexicon-community/types`
 
 ## Usage
-TODO
+### Listing bookmarks
+```ts
+import {CommunityLexiconBookmarksBookmark} from '@lexicon-community/types'
+...
+let bookmarks: CommunityLexiconBookmarksBookmark.Record[] = []
+      const promises = [
+        accumulate(cursor =>
+          agent.com.atproto.repo
+            .listRecords({
+              repo: agent!.did ?? '',
+              collection: 'community.lexicon.bookmarks.bookmark',
+              cursor,
+            })
+            .then(res => ({
+              cursor: res.data.cursor,
+              items: res.data.records,
+            })),
+        ),
+      ]
+
+      const resultset = await Promise.all(promises)
+      for (const res of resultset) {
+        for (let bookmark of res) {
+          const isValid =
+            CommunityLexiconBookmarksBookmark.isRecord(bookmark.value) &&
+            CommunityLexiconBookmarksBookmark.validateRecord(bookmark.value)
+              .success
+          if (isValid) {
+            const recordVal =
+              bookmark.value as CommunityLexiconBookmarksBookmark.Record
+            bookmarks.push(recordVal)
+          }
+        }
+      }
+      return bookmarks
+```
 
 ## Generating types from the [Lexicons repo](https://github.com/lexicon-community/lexicon)
 
